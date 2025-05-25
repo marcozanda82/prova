@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Geografia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Stili Generali */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #00001a; /* Sfondo scuro */
+            color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, #000033, #00001a); /* Gradiente scuro per il container */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Counter Display */
+        #info-bar {
+            display: flex;
+            justify-content: center; /* Centered since only counter remains */
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 5px 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Start Page */
+        #start-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #start-page p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        #topic-select-container {
+            margin-bottom: 20px;
+            color: #f0f0f0; /* Colore testo per la label */
+        }
+
+        #topic-select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #00001a; /* Sfondo scuro per la select */
+            color: #f0f0f0; /* Colore testo per le opzioni */
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+
+        #start-button {
+            background-color: #00bfff;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        #start-button:hover {
+            background-color: #009acd;
+        }
+
+        /* Quiz Section */
+        #quiz-section {
+            display: none; /* Hidden initially */
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #question-container {
+            margin-bottom: 20px;
+            text-align: left;
+            width: 100%;
+        }
+
+        #question-container h2 {
+            color: #ffd700;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        #answer-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            background-color: #333366;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            text-align: left;
+            word-wrap: break-word; /* Break long words */
+            white-space: normal; /* Allow text wrapping */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #444488;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.correct {
+            background-color: #28a745; /* Green */
+            color: #fff;
+            pointer-events: none; /* Prevent clicking after selection */
+        }
+
+        .btn.wrong {
+            background-color: #dc3545; /* Red */
+            color: #fff;
+            pointer-events: none; /* Prevent clicking after selection */
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #next-button {
+             background-color: #00bfff;
+             color: #fff;
+             border: none;
+             padding: 10px 20px;
+             border-radius: 8px;
+             font-size: 1.1em;
+             cursor: pointer;
+             transition: background-color 0.3s ease;
+             margin-top: 20px;
+             display: none; /* Hidden initially */
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+         #next-button:hover {
+             background-color: #009acd;
+         }
+
+        /* Result Page */
+        #result-page {
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #result-page h2 {
+            color: #ffd700;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        #score-text {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        #incorrect-answers-section {
+            width: 100%;
+            text-align: left;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #incorrect-answers-section h3 {
+            color: #ff6347; /* Tomato color for wrong answers */
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        /* Stili per Accordion Risposte Errate */
+        .topic-header { /* Stile per l'intestazione cliccabile */
+            color: #00bfff;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.2s ease;
+            font-size: 1.1em; /* Leggermente più grande */
+            font-weight: bold;
+        }
+
+        .topic-header:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+         .topic-header::after { /* Aggiunge una freccetta indicatrice */
+             content: ' ▼'; /* Freccia verso il basso */
+             font-size: 0.8em;
+             float: right; /* Mette la freccia a destra */
+             transition: transform 0.3s ease;
+         }
+
+        .topic-header.active::after { /* Cambia la freccia quando attivo */
+            transform: rotate(180deg); /* Freccia verso l'alto */
+        }
+
+        .incorrect-questions-list { /* Lista delle domande, nascosta di default */
+            list-style: none;
+            padding-left: 15px; /* Aggiunge un po' di indentazione */
+            margin: 0;
+            max-height: 0; /* Inizia nascosta */
+            overflow: hidden; /* Nasconde il contenuto */
+            transition: max-height 0.3s ease-out; /* Transizione per l'altezza */
+        }
+
+         .incorrect-questions-list.visible { /* Classe per mostrare la lista */
+            max-height: 1000px; /* Un'altezza massima sufficiente, si aggiusterà */
+             margin-top: 5px; /* Spazio quando visibile */
+             margin-bottom: 10px; /* Spazio sotto la lista */
+             transition: max-height 0.5s ease-in; /* Transizione più lunga per aprire */
+         }
+
+        .incorrect-questions-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .incorrect-questions-list li strong {
+             color: #ffd700; /* Highlight question text */
+        }
+
+        .incorrect-questions-list li .correct-answer {
+            color: #28a745; /* Green color for correct answer */
+            font-weight: bold;
+             display: block; /* Display on new line */
+             margin-top: 5px;
+        }
+
+
+        /* Stili per il pulsante Ricomincia Quiz */
+        #restart-button {
+             background-color: #00bfff;
+             color: #fff;
+             border: none;
+             padding: 10px 20px;
+             border-radius: 8px;
+             font-size: 1.1em;
+             cursor: pointer;
+             transition: background-color 0.3s ease;
+             margin-top: 20px; /* Spazio sopra il pulsante */
+             display: none; /* Hidden initially, gestito da JS */
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        #restart-button:hover {
+            background-color: #009acd;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quiz di Geografia</h1>
+        </header>
+
+        <div id="info-bar">
+            <div id="question-counter" class="info-item">Domanda: 0/10</div>
+        </div>
+
+        <div id="start-page">
+            <p>Benvenuto al Quiz di Geografia! Metti alla prova le tue conoscenze.</p>
+            <div id="topic-select-container">
+                <label for="topic-select">Seleziona un argomento:</label>
+                <select id="topic-select">
+                    <option value="all">Tutti gli argomenti</option>
+                    <option value="acqua_terra_ciclo">L'acqua sulla Terra e il Ciclo dell'Acqua</option>
+                    <option value="ghiacciai">I Ghiacciai</option>
+                    <option value="fiumi">I Fiumi</option>
+                    <option value="laghi">I Laghi</option>
+                    <option value="mari_coste">I Mari e le Coste</option>
+                    <option value="acque_esseri_umani">Le Acque e gli Esseri Umani</option>
+                    <option value="inquinamento_mare">L'inquinamento del Mare</option>
+                 </select>
+            </div>
+            <button id="start-button">Inizia Quiz</button>
+        </div>
+
+        <div id="quiz-section">
+            <div id="question-container">
+                <h2 id="question-text">Testo della domanda</h2>
+                <div id="answer-buttons" class="btn-grid">
+                    </div>
+            </div>
+            <button id="next-button">Avanti</button>
+        </div>
+
+        <div id="result-page">
+            <h2>Risultato Quiz</h2>
+            <p id="score-text">Hai totalizzato ${score} punti su ${currentQuestions.length}.</p>
+            <div id="incorrect-answers-section" style="display: none;">
+                <h3>Domande a cui hai risposto in modo errato:</h3>
+                <div id="incorrect-answers-container">
+                </div>
+            </div>
+
+             <button id="restart-button" style="display: none;">Ricomincia Quiz</button>
+        </div>
+
+        <audio id="start-sound" src="https://www.myinstants.com/media/sounds/windows-11-startup_mtOXB9m.mp3" preload="auto"></audio>
+        <audio id="correct-sound" src="https://www.myinstants.com/media/sounds/correct-answer-sound-effect-19.mp3" preload="auto"></audio>
+        <audio id="wrong-sound" src="https://www.myinstants.com/media/sounds/2000-lose-who-wants-to-be-a-millionaire.mp3" preload="auto"></audio>
+        <audio id="perfect-score-sound" src="https://www.myinstants.com/media/sounds/we-are-the-champions-copia.mp3" preload="auto"></audio>
+        <audio id="good-score-sound" src="https://www.myinstants.com/media/sounds/victory-mario-series-hq-super-smash-bros.mp3" preload="auto"></audio>
+        <audio id="low-score-sound" src="https://www.myinstants.com/media/sounds/super-mario-bros_1.mp3" preload="auto"></audio>
+        <audio id="restart-sound" src="https://www.myinstants.com/media/sounds/applause-tony-d.mp3" preload="auto"></audio>
+
+    </div>
+
+    <script>
+        const allQuestions = [
+            // Domande su L'acqua sulla Terra e il Ciclo dell'Acqua
+            {
+                question: "Quale frazione della superficie terrestre è coperta dall'acqua, secondo quanto indicato nello schema?",
+                answers: [
+                    { text: "Circa la metà", correct: false },
+                    { text: "Circa un quarto", correct: false },
+                    { text: "Circa tre quarti", correct: true },
+                    { text: "Quasi la totalità", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Come viene chiamato l'insieme di tutte le acque presenti sul nostro pianeta (mari, fiumi, laghi, ghiacciai, vapore acqueo)?",
+                answers: [
+                    { text: "Atmosfera", correct: false },
+                    { text: "Litosfera", correct: false },
+                    { text: "Idrosfera", correct: true },
+                    { text: "Biosfera", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Nello schema, qual è la percentuale approssimativa di acqua dolce rispetto a tutta l'acqua presente nell'idrosfera?",
+                answers: [
+                    { text: "97%", correct: false },
+                    { text: "50%", correct: false },
+                    { text: "3%", correct: true },
+                    { text: "25%", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Nello schema, in quale stato fisico si trova l'acqua quando è presente come vapore acqueo nell'aria?",
+                answers: [
+                    { text: "Liquido", correct: false },
+                    { text: "Solido", correct: false },
+                    { text: "Aeriforme", correct: true },
+                    { text: "Gassoso ionizzato", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Qual è la principale fonte di energia che permette l'evaporazione dell'acqua da mari, fiumi e laghi, dando inizio al ciclo?",
+                answers: [
+                    { text: "L'energia geotermica", correct: false },
+                    { text: "L'energia solare", correct: true },
+                    { text: "L'energia eolica", correct: false },
+                    { text: "L'energia delle maree", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Cosa succede al vapore acqueo quando sale nell'atmosfera e si raffredda, secondo il ciclo dell'acqua?",
+                answers: [
+                    { text: "Si trasforma direttamente in ghiaccio e cade come grandine.", correct: false },
+                    { text: "Si condensa formando le nuvole.", correct: true },
+                    { text: "Viene spazzato via dai venti solari nello spazio.", correct: false },
+                    { text: "Aumenta la sua temperatura e si espande.", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Se la temperatura dell'aria scende sotto gli 0°C, in quali forme solide possono principalmente avvenire le precipitazioni?",
+                answers: [
+                    { text: "Solo pioggia mista a neve", correct: false },
+                    { text: "Pioggia e rugiada", correct: false },
+                    { text: "Neve o grandine", correct: true },
+                    { text: "Nebbia densa e brina", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Come si chiama il processo descritto nello schema per cui parte dell'acqua piovana penetra nel terreno alimentando le falde acquifere?",
+                answers: [
+                    { text: "Ruscellamento", correct: false },
+                    { text: "Evaporazione", correct: false },
+                    { text: "Sublimazione", correct: false },
+                    { text: "Infiltrazione", correct: true }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "In che modo l'acqua che cade sulla terraferma ritorna prevalentemente ai mari e agli oceani, secondo le fasi finali del ciclo descritte?",
+                answers: [
+                    { text: "Solo attraverso l'evaporazione diretta dalla superficie terrestre.", correct: false },
+                    { text: "Principalmente attraverso i fiumi e le acque sotterranee.", correct: true },
+                    { text: "Venendo assorbita interamente dalle piante e poi traspirata.", correct: false },
+                    { text: "Attraverso la fusione dei soli ghiacciai continentali.", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+            {
+                question: "Qual è lo scopo o il risultato principale del \"Ciclo dell'Acqua\" come descritto complessivamente nello schema?",
+                answers: [
+                    { text: "Creare nuova acqua chimicamente pura per il pianeta.", correct: false },
+                    { text: "Spostare l'acqua salata dai mari verso i continenti per desalinizzarla.", correct: false },
+                    { text: "Garantire la continua circolazione e il rinnovamento dell'acqua tra l'atmosfera, la terra e i mari.", correct: true },
+                    { text: "Aumentare la temperatura media della superficie terrestre attraverso il vapore.", correct: false }
+                ],
+                topic: "acqua_terra_ciclo"
+            },
+
+            // Domande su I Ghiacciai
+            {
+                question: "Da cosa derivano principalmente i ghiacciai, secondo il testo?",
+                answers: [
+                    { text: "Da grandi fiumi che congelano in inverno.", correct: false },
+                    { text: "Dall'accumulo di neve e dalla sua trasformazione in ghiaccio.", correct: true },
+                    { text: "Da eruzioni vulcaniche sottomarine nelle zone polari.", correct: false },
+                    { text: "Dalla compattazione di rocce sedimentarie.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Cos'è il \"limite delle nevi perenni\" menzionato nel testo a proposito dei ghiacciai?",
+                answers: [
+                    { text: "Il punto più basso raggiunto dalla lingua di un ghiacciaio.", correct: false },
+                    { text: "La quota al di sopra della quale la neve si conserva anche d'estate.", correct: true },
+                    { text: "Il confine esatto tra la Svizzera e l'Italia.", correct: false },
+                    { text: "La linea che segna la massima estensione storica di un ghiacciaio.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Come varia la posizione del limite delle nevi perenni sulla Terra, secondo il testo?",
+                answers: [
+                    { text: "È sempre alla stessa altitudine in tutto il mondo.", correct: false },
+                    { text: "È più alto nelle zone polari e più basso vicino all'Equatore.", correct: false },
+                    { text: "È più basso nelle zone polari e si sposta ad altitudini maggiori avvicinandosi all'Equatore.", correct: true },
+                    { text: "Dipende esclusivamente dalla quantità di precipitazioni nevose annuali.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Quale processo prevale nel \"bacino di accumulo\" di un ghiacciaio?",
+                answers: [
+                    { text: "Lo scioglimento abbondante del ghiaccio.", correct: false },
+                    { text: "L'erosione della roccia sottostante da parte del vento.", correct: false },
+                    { text: "L'accumulo di neve e la sua trasformazione in ghiaccio, che alimenta il ghiacciaio.", correct: true },
+                    { text: "La formazione di acqua di fusione che scorre in superficie.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Cosa domina nella \"zona di ablazione\" di un ghiacciaio, secondo il testo?",
+                answers: [
+                    { text: "L'accumulo continuo di nuova neve fresca.", correct: false },
+                    { text: "La formazione di crepacci molto profondi e pericolosi.", correct: false },
+                    { text: "Lo scioglimento del ghiaccio.", correct: true },
+                    { text: "Il trasporto dei detriti rocciosi più grossolani.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Cosa ha origine dalla \"fronte\" di un ghiacciaio, la parte più bassa della sua lingua?",
+                answers: [
+                    { text: "Nuove nevicate che tendono ad ispessire il ghiacciaio.", correct: false },
+                    { text: "Grandi accumuli di morene laterali particolarmente elevate.", correct: false },
+                    { text: "L'acqua di fusione del ghiacciaio che alimenta un corso d'acqua.", correct: true },
+                    { text: "Profondi crepacci che si formano per la tensione del ghiaccio.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Quale forma caratteristica assume una valle modellata dall'azione erosiva di un ghiacciaio, come descritto a pagina A95?",
+                answers: [
+                    { text: "Una forma a V, stretta e molto profonda, con pareti verticali.", correct: false },
+                    { text: "Una forma a U, larga e piatta sul fondo con fianchi ripidi.", correct: true },
+                    { text: "Una forma a conca circolare, simile a un cratere vulcanico.", correct: false },
+                    { text: "Una forma completamente piana e uniforme, senza rilievi laterali.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Come si formano i fiordi, secondo la descrizione nel testo?",
+                answers: [
+                    { text: "Dall'accumulo di detriti morenici lungo le coste rocciose.", correct: false },
+                    { text: "Da valli fluviali preesistenti che vengono poi allagate dall'innalzamento del livello del mare.", correct: false },
+                    { text: "Da valli scavate da un ghiacciaio che sono state successivamente invase dall'acqua del mare.", correct: true },
+                    { text: "Da fratture della crosta terrestre sommerse dall'oceano a causa di movimenti tettonici.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Cosa sono le \"morene\" associate ai ghiacciai, menzionate a pagina A95?",
+                answers: [
+                    { text: "Le grandi fratture longitudinali presenti sulla superficie del ghiacciaio.", correct: false },
+                    { text: "I corsi d'acqua principali che nascono dalla fusione del ghiaccio alla fronte.", correct: false },
+                    { text: "Accumuli di masse rocciose e ciottoli trasportati e depositati dal ghiacciaio, che formano colline.", correct: true },
+                    { text: "Le zone più elevate e innevate del bacino di accumulo del ghiacciaio.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+            {
+                question: "Qual è la causa principale del movimento di un ghiacciaio, come spiegato nel testo a pagina A94?",
+                answers: [
+                    { text: "La spinta continua dei venti gelidi che soffiano nelle zone polari e in alta montagna.", correct: false },
+                    { text: "L'espansione termica del ghiaccio dovuta al calore geotermico proveniente dal sottosuolo.", correct: false },
+                    { text: "Il fatto che il ghiaccio è un materiale plastico e, spinto dal suo stesso peso, si muove verso il basso.", correct: true },
+                    { text: "Le frequenti valanghe di neve che cadono sul bacino di accumulo e lo spingono a valle.", correct: false }
+                ],
+                topic: "ghiacciai"
+            },
+
+            // Domande su I Fiumi
+            {
+                question: "Secondo la descrizione nel testo, cosa sono principalmente i fiumi?",
+                answers: [
+                    { text: "Accumuli temporanei di acqua piovana destinati a prosciugarsi.", correct: false },
+                    { text: "Canali scavati esclusivamente dall'azione del vento nelle valli.", correct: false },
+                    { text: "Corsi d'acqua perenni alimentati da piogge, scioglimento di ghiacciai o sorgenti.", correct: true },
+                    { text: "Depressioni del terreno riempite principalmente da acqua marina.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Come viene chiamato il territorio che raccoglie tutte le acque che confluiscono in un fiume, secondo il testo a pagina A96?",
+                answers: [
+                    { text: "Linea spartiacque.", correct: false },
+                    { text: "Bacino idrografico.", correct: true },
+                    { text: "Affluente principale.", correct: false },
+                    { text: "Letto del fiume.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Riguardo la pendenza di un fiume, quale affermazione è corretta secondo il testo?",
+                answers: [
+                    { text: "È sempre costante lungo tutto il percorso del fiume.", correct: false },
+                    { text: "È di solito maggiore nel corso inferiore, vicino alla foce.", correct: false },
+                    { text: "Misura la quantità totale di affluenti che riceve.", correct: false },
+                    { text: "È di solito maggiore nel corso superiore e diminuisce man mano che ci si avvicina alla foce.", correct: true }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Cosa si intende per \"portata\" di un fiume, come spiegato a pagina A96?",
+                answers: [
+                    { text: "La profondità massima del fiume nel suo corso mediano.", correct: false },
+                    { text: "La larghezza della foce quando il fiume si immette nel mare.", correct: false },
+                    { text: "La quantità d'acqua (cioè il suo volume) che passa ogni secondo per una sezione del suo corso.", correct: true },
+                    { text: "La velocità massima della corrente durante i periodi di piena.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "A quale tipo di corso d'acqua si associa un \"regime torrentizio\" e cosa lo caratterizza, secondo il testo?",
+                answers: [
+                    { text: "Ai grandi fiumi navigabili, con una portata costante tutto l'anno.", correct: false },
+                    { text: "Ai fiumi che formano una foce a delta, per il grande trasporto di sedimenti.", correct: false },
+                    { text: "Ai torrenti, corsi d'acqua stagionali che si asciugano nel periodo di siccità.", correct: true },
+                    { text: "Ai fiumi sotterranei che scorrono in grotte carsiche.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Quale azione principale compie il fiume nel suo corso superiore e quale forma di valle tende a creare, secondo il testo a pagina A97?",
+                answers: [
+                    { text: "Deposita i detriti più fini e forma ampie pianure alluvionali.", correct: false },
+                    { text: "Ha un forte potere erosivo e scava la tipica valle a V.", correct: true },
+                    { text: "Forma prevalentemente larghi meandri e deposita ghiaia grossolana.", correct: false },
+                    { text: "Rallenta significativamente la sua corsa e forma una foce a estuario.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Dove si formano prevalentemente i meandri e quale processo avviene nelle loro curve, secondo il testo?",
+                answers: [
+                    { text: "Nel corso superiore, dove il fiume ha maggiore energia per erodere le rocce.", correct: false },
+                    { text: "Principalmente alla foce, a causa dell'interazione con le correnti marine.", correct: false },
+                    { text: "Nel corso mediano, dove il fiume erode la parte esterna della curva e deposita materiale in quella interna.", correct: true },
+                    { text: "Esclusivamente nel corso inferiore, dove il fiume deposita tutti i suoi sedimenti più fini.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Qual è l'azione principale del fiume nel suo corso inferiore, come descritto a pagina A97?",
+                answers: [
+                    { text: "Un'intensa attività erosiva che scava ulteriormente il letto del fiume.", correct: false },
+                    { text: "La formazione di cascate e rapide a causa dell'aumento della pendenza.", correct: false },
+                    { text: "Il trasporto di detriti rocciosi di grandi dimensioni verso la foce.", correct: false },
+                    { text: "Il deposito dei detriti fini che ha trasportato.", correct: true }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "In quali condizioni si forma una foce a delta, secondo il testo?",
+                answers: [
+                    { text: "Quando il mare è molto profondo e le correnti marine sono molto forti.", correct: false },
+                    { text: "Quando la costa è alta e rocciosa, impedendo al fiume di depositare detriti.", correct: false },
+                    { text: "Quando la costa è bassa e sabbiosa e la corrente del fiume, arrivando al mare, non riesce a spingere i detriti al largo.", correct: true },
+                    { text: "Quando il fiume sfocia in un lago molto vasto e poco profondo.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+            {
+                question: "Cosa caratterizza una foce a estuario, come indicato a pagina A97?",
+                answers: [
+                    { text: "L'accumulo di numerosi isolotti sabbiosi e detriti che formano una tipica forma triangolare.", correct: false },
+                    { text: "Un corso d'acqua che si divide in numerosi rami prima di raggiungere il mare.", correct: false },
+                    { text: "La foce del fiume si allarga a imbuto e il mare penetra nel tratto finale del fiume, riuscendo a trascinare via i detriti.", correct: true },
+                    { text: "Una pendenza del terreno molto accentuata che causa una corrente estremamente rapida fino all'immissione nel mare.", correct: false }
+                ],
+                topic: "fiumi"
+            },
+
+            // Domande su I Laghi
+            {
+                question: "Secondo la definizione fornita a pagina A98, cos'è un lago?",
+                answers: [
+                    { text: "Una grande riserva di acqua salata utilizzata per l'industria.", correct: false },
+                    { text: "Un corso d'acqua veloce che scorre verso il mare.", correct: false },
+                    { text: "Una massa d'acqua, generalmente dolce, che occupa una depressione della superficie terrestre.", correct: true },
+                    { text: "Un canale artificiale costruito per la navigazione.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Da quali fonti può essere alimentato un lago, oltre che dai fiumi immissari, secondo il testo?",
+                answers: [
+                    { text: "Esclusivamente da sorgenti sotterranee.", correct: false },
+                    { text: "Solo da altri laghi più grandi.", correct: false },
+                    { text: "Direttamente da acque piovane o da quelle provenienti dalla fusione di nevi o ghiacciai.", correct: true },
+                    { text: "Unicamente dall'acqua del mare attraverso canali.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Perché alcuni laghi, specialmente in climi aridi e senza emissari, diventano salati secondo il testo a pagina A98?",
+                answers: [
+                    { text: "A causa dell'inquinamento industriale che deposita sali.", correct: false },
+                    { text: "Perché sono alimentati da fiumi che trasportano acqua di mare.", correct: false },
+                    { text: "Perché i sali portati dagli immissari rimangono e l'evaporazione concentra la salinità.", correct: true },
+                    { text: "A causa di rocce saline presenti sul fondo del lago che si sciolgono.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Qual è uno degli scopi principali per cui vengono costruiti i laghi artificiali, come menzionato a pagina A98?",
+                answers: [
+                    { text: "Per creare riserve naturali per pesci esotici.", correct: false },
+                    { text: "Per favorire la formazione di nebbia nelle valli.", correct: false },
+                    { text: "Per produrre energia idroelettrica o per l'irrigazione.", correct: true },
+                    { text: "Per aumentare l'umidità del suolo nelle aree desertiche.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Quale effetto può avere un lago esteso e profondo sul clima delle terre circostanti, secondo il testo?",
+                answers: [
+                    { text: "Rendere gli inverni più rigidi e le estati più afose.", correct: false },
+                    { text: "Non avere alcuna influenza significativa sul clima locale.", correct: false },
+                    { text: "Un'azione mitigatrice, con inverni più miti ed estati più fresche e ventilate.", correct: true },
+                    { text: "Causare un aumento delle precipitazioni nevose.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Come viene anche chiamato un lago glaciale, formatosi in una conca scavata da un ghiacciaio, secondo pagina A99?",
+                answers: [
+                    { text: "Lago craterico.", correct: false },
+                    { text: "Lago vallivo.", correct: true },
+                    { text: "Laguna costiera.", correct: false },
+                    { text: "Lago di frana.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Qual è la forma tipica di un lago vulcanico e dove si trova generalmente, secondo il testo?",
+                answers: [
+                    { text: "Allungata, nel letto di un antico fiume.", correct: false },
+                    { text: "Irregolare, formato da detriti morenici.", correct: false },
+                    { text: "Circolare, all'interno del cratere di un antico vulcano.", correct: true },
+                    { text: "A forma di U, in una valle glaciale.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Come si forma un lago tettonico, secondo la spiegazione a pagina A99?",
+                answers: [
+                    { text: "Per l'accumulo di acqua in una dolina carsica.", correct: false },
+                    { text: "Occupando un avvallamento formatosi per lo sprofondamento di una porzione di crosta terrestre.", correct: true },
+                    { text: "A causa di uno sbarramento artificiale creato dall'uomo.", correct: false },
+                    { text: "Per l'azione erosiva di un fiume che scava una profonda conca.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Quando un lago costiero, formato da acqua racchiusa da uno sbarramento di sabbia, viene chiamato \"laguna\"?",
+                answers: [
+                    { text: "Quando le sue acque sono particolarmente profonde.", correct: false },
+                    { text: "Quando è alimentato esclusivamente da acqua piovana.", correct: false },
+                    { text: "Se le sue acque si mescolano a quelle del mare attraverso delle aperture.", correct: true },
+                    { text: "Se è completamente isolato dal mare e contiene solo acqua dolce.", correct: false }
+                ],
+                topic: "laghi"
+            },
+            {
+                question: "Qual è il processo di formazione di un lago carsico, secondo il testo a pagina A99?",
+                answers: [
+                    { text: "Si forma quando un fiume viene ostruito da una frana di rocce carsiche.", correct: false },
+                    { text: "Si forma in rocce di tipo carsico, dove l'azione piovana scioglie ed erode la roccia, scava una conca e infine la riempie.", correct: true },
+                    { text: "Occupa la caldera di un vulcano spento in una regione carsica.", correct: false },
+                    { text: "È un lago artificiale creato per studiare i fenomeni carsici.", correct: false }
+                ],
+                topic: "laghi"
+            },
+
+            // Domande su I Mari e le Coste
+            {
+                question: "Secondo il testo a pagina A100, come vengono chiamati i bacini d'acqua più piccoli e meno profondi dell'oceano, delimitati dai continenti?",
+                answers: [
+                    { text: "Laghi salati.", correct: false },
+                    { text: "Mari.", correct: true },
+                    { text: "Fiumi oceanici.", correct: false },
+                    { text: "Arcipelaghi.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Perché l'acqua marina è salata, secondo quanto spiegato a pagina A100?",
+                answers: [
+                    { text: "A causa dei vulcani sottomarini che rilasciano sali.", correct: false },
+                    { text: "Perché l'evaporazione lascia disciolti in mare i sali minerali trasportati dai fiumi.", correct: true },
+                    { text: "A causa dell'inquinamento prodotto dalle navi.", correct: false },
+                    { text: "Perché le rocce costiere rilasciano continuamente sale.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Cosa sono le onde marine e da cosa sono prodotte, secondo il testo?",
+                answers: [
+                    { text: "Spostamenti di grandi masse d'acqua dovuti alla rotazione terrestre.", correct: false },
+                    { text: "Oscillazioni della superficie marina prodotte dall'azione del vento.", correct: true },
+                    { text: "Innalzamenti periodici del livello del mare dovuti all'attrazione lunare.", correct: false },
+                    { text: "Correnti profonde causate da differenze di temperatura.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Cosa sono le correnti marine, come descritte a pagina A100?",
+                answers: [
+                    { text: "Oscillazioni superficiali causate dalle maree.", correct: false },
+                    { text: "Spostamenti di grandi masse d'acqua, come un fiume che scorre all'interno del mare.", correct: true },
+                    { text: "L'effetto dell'attrazione gravitazionale del Sole sull'acqua.", correct: false },
+                    { text: "Il movimento dell'acqua vicino alla costa dovuto alla forma del litorale.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Da cosa sono causate le maree, secondo il testo?",
+                answers: [
+                    { text: "Dall'azione del vento sulla superficie del mare.", correct: false },
+                    { text: "Dalle differenze di salinità tra le diverse masse d'acqua.", correct: false },
+                    { text: "Da periodici innalzamenti e abbassamenti del livello del mare dovuti all'attrazione della Luna e del Sole.", correct: true },
+                    { text: "Dai movimenti tellurici sottomarini.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Come viene definita una \"penisola\" nel testo a pagina A100?",
+                answers: [
+                    { text: "Una terra completamente circondata dal mare.", correct: false },
+                    { text: "Un'insenatura della costa in cui il mare penetra nella terraferma.", correct: false },
+                    { text: "Una striscia di terra bagnata dal mare su tre lati e unita a un lato alla terraferma.", correct: true },
+                    { text: "Un insieme di isole vicine tra loro.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Cos'è un \"istmo\", secondo la descrizione fornita?",
+                answers: [
+                    { text: "Un braccio di mare stretto tra due terre emerse.", correct: false },
+                    { text: "Una sporgenza della terra che si protende nel mare.", correct: false },
+                    { text: "Uno stretto cordone di terra o sabbia che collega due porzioni di terraferma più estese.", correct: true },
+                    { text: "Una parete rocciosa alta e a picco sulla costa.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Quali forme costiere sono il risultato dell'azione erosiva delle onde sulle coste alte e rocciose, secondo pagina A101?",
+                answers: [
+                    { text: "Spiagge sabbiose e dune costiere.", correct: false },
+                    { text: "Falesie, archi marini e faraglioni.", correct: true },
+                    { text: "Golfi ampi e lagune.", correct: false },
+                    { text: "Promontori bassi e penisole sabbiose.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Qual è l'azione principale delle onde sulle coste basse e quale forma costiera determina, secondo il testo?",
+                answers: [
+                    { text: "L'erosione della sabbia, formando profonde insenature.", correct: false },
+                    { text: "Il deposito di materiale proveniente dall'erosione, formando le spiagge.", correct: true },
+                    { text: "La creazione di alte dune sabbiose.", correct: false },
+                    { text: "Lo scavo di canali e stretti.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            {
+                question: "Quale importante funzione protettiva hanno le dune formate dal vento sulle spiagge sabbiose, come indicato a pagina A101?",
+                answers: [
+                    { text: "Facilitano l'accesso al mare per la balneazione.", correct: false },
+                    { text: "Aumentano l'erosione delle rocce retrostanti.", correct: false },
+                    { text: "Proteggono le coste sabbiose dall'erosione marina assorbendo l'energia delle mareggiate.", correct: true },
+                    { text: "Attirano diverse specie di uccelli marini per la nidificazione.", correct: false }
+                ],
+                topic: "mari_coste"
+            },
+            
+            // Domande su Le Acque e gli Esseri Umani
+            {
+                question: "Secondo il testo, quale dei seguenti NON è considerato un uso domestico dell'acqua?",
+                answers: [
+                    { text: "Cucinare", correct: false },
+                    { text: "Irrigare i campi", correct: true },
+                    { text: "Lavarsi", correct: false },
+                    { text: "Pulire la casa", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Per quale motivo, storicamente, città come Londra e Parigi sono sorte lungo importanti fiumi?",
+                answers: [
+                    { text: "Per sfruttare l'energia idroelettrica.", correct: false },
+                    { text: "Per la presenza di spiagge turistiche.", correct: false },
+                    { text: "Perché i fiumi fungevano da importanti vie di comunicazione e commercio.", correct: true },
+                    { text: "Per estrarre più facilmente la sabbia dal letto del fiume.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Cosa sono le 'golene', menzionate nel testo a proposito dei fiumi?",
+                answers: [
+                    { text: "Barriere artificiali per proteggere le spiagge.", correct: false },
+                    { text: "Canali creati per deviare il corso dei fiumi.", correct: false },
+                    { text: "Spazi ai lati del fiume che assorbono l'acqua durante le piene.", correct: true },
+                    { text: "Bacini per la raccolta dell'acqua piovana.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Qual è una delle principali conseguenze negative della costruzione di barriere artificiali per proteggere le coste?",
+                answers: [
+                    { text: "La diminuzione del livello del mare.", correct: false },
+                    { text: "L'aumento della velocità delle correnti fluviali.", correct: false },
+                    { text: "L'arretramento della linea di costa e il degrado del paesaggio.", correct: true },
+                    { text: "La purificazione naturale dell'acqua.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Oltre al trasporto, quale altra attività economica fondamentale si sviluppa nei porti?",
+                answers: [
+                    { text: "La produzione di energia eolica.", correct: false },
+                    { text: "Lo stoccaggio e l'attracco delle imbarcazioni.", correct: true },
+                    { text: "L'agricoltura intensiva.", correct: false },
+                    { text: "L'estrazione di minerali.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Quale intervento umano sui fiumi ha lo scopo di produrre energia idroelettrica?",
+                answers: [
+                    { text: "La costruzione di argini.", correct: false },
+                    { text: "L'estrazione di ghiaia e sabbia.", correct: false },
+                    { text: "La costruzione di dighe e condutture.", correct: true },
+                    { text: "La deviazione del corso con canali artificiali.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Secondo il testo, la tecnologia moderna ha permesso insediamenti umani anche in luoghi...",
+                answers: [
+                    { text: "Esclusivamente in alta montagna.", correct: false },
+                    { text: "Lontani da fonti d'acqua, come i deserti.", correct: true },
+                    { text: "Solo su isole artificiali.", correct: false },
+                    { text: "Sottomarini.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "La costruzione di saline e bacini per l'itticoltura sono esempi di interventi umani...",
+                answers: [
+                    { text: "Sui fiumi per evitare inondazioni.", correct: false },
+                    { text: "Sulle coste per scopi economici.", correct: true },
+                    { text: "Nei deserti per trovare acqua.", correct: false },
+                    { text: "Sui laghi per la navigazione.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Restringere il corso di un fiume per costruire edifici può avere una conseguenza pericolosa. Quale?",
+                answers: [
+                    { text: "Rende l'acqua più pulita.", correct: false },
+                    { text: "Diminuisce la quantità di pesci.", correct: false },
+                    { text: "Aumenta la velocità dell'acqua, che può erodere e danneggiare le sponde.", correct: true },
+                    { text: "Trasforma il fiume in un lago.", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+            {
+                question: "Quale città viene citata come esempio di un porto costruito sull'estuario di un grande fiume?",
+                answers: [
+                    { text: "Venezia", correct: false },
+                    { text: "Lione", correct: false },
+                    { text: "Amburgo", correct: true },
+                    { text: "Torino", correct: false }
+                ],
+                topic: "acque_esseri_umani"
+            },
+
+            // Domande su L'inquinamento del Mare
+            {
+                question: "Secondo il testo, qual è la causa principale dell'inquinamento del mare?",
+                answers: [
+                    { text: "Le eruzioni vulcaniche sottomarine", correct: false },
+                    { text: "Le attività umane", correct: true },
+                    { text: "Il ciclo naturale delle maree", correct: false },
+                    { text: "Le piogge acide", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Come vengono chiamati i frammenti di plastica con dimensioni inferiori ai 5 millimetri?",
+                answers: [
+                    { text: "Nanoplastica", correct: false },
+                    { text: "Plastica leggera", correct: false },
+                    { text: "Poliplastica", correct: false },
+                    { text: "Microplastica", correct: true }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Qual è l'effetto principale della \"patina nera\" formata dal petrolio sulla superficie del mare?",
+                answers: [
+                    { text: "Aumenta la temperatura dell'acqua", correct: false },
+                    { text: "Impedisce il passaggio dell'ossigeno, soffocando gli organismi", correct: true },
+                    { text: "Rende l'acqua più salata", correct: false },
+                    { text: "Attira i pesci in superficie", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Secondo il testo, quale fenomeno può essere la conseguenza dell'aggregazione della plastica trasportata dalle correnti?",
+                answers: [
+                    { text: "La formazione di nuove spiagge", correct: false },
+                    { text: "La creazione di \"isole di plastica\"", correct: true },
+                    { text: "La diminuzione della salinità marina", correct: false },
+                    { text: "L'aumento delle alghe", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Qual è il pericolo finale per la salute umana sia dell'inquinamento da petrolio sia da plastica?",
+                answers: [
+                    { text: "L'aumento delle allergie cutanee", correct: false },
+                    { text: "La contaminazione dell'aria nelle zone costiere", correct: false },
+                    { text: "L'ingestione di sostanze nocive attraverso la catena alimentare", correct: true },
+                    { text: "La diminuzione delle temperature globali", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Quale attività economica, fondamentale per oltre un miliardo di persone, è minacciata dall'inquinamento marino?",
+                answers: [
+                    { text: "Il turismo balneare", correct: false },
+                    { text: "L'estrazione di sale", correct: false },
+                    { text: "La pesca", correct: true },
+                    { text: "La navigazione commerciale", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Secondo il testo, come possono le sostanze tossiche contenute nel petrolio entrare nel nostro corpo?",
+                answers: [
+                    { text: "Attraverso la respirazione dell'aria di mare", correct: false },
+                    { text: "Bevendo acqua desalinizzata", correct: false },
+                    { text: "Tramite il consumo di organismi marini che le hanno assimilate", correct: true },
+                    { text: "Toccando la sabbia inquinata", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Cosa veniva considerato il mare in passato, un'idea che ha contribuito all'attuale livello di inquinamento?",
+                answers: [
+                    { text: "Una risorsa da proteggere a tutti i costi", correct: false },
+                    { text: "Un luogo sacro e intoccabile", correct: false },
+                    { text: "Un'inesauribile fonte di cibo", correct: false },
+                    { text: "Uno scarico naturale per ogni tipo di rifiuto", correct: true }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Oltre agli incidenti alle piattaforme, quale altra fonte di inquinamento da petrolio viene menzionata?",
+                answers: [
+                    { text: "Le perdite degli oleodotti terrestri", correct: false },
+                    { text: "Le emissioni delle automobili", correct: false },
+                    { text: "Il lavaggio delle cisterne delle navi petroliere", correct: true },
+                    { text: "Lo scioglimento dei ghiacciai", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            },
+            {
+                question: "Secondo l'infografica, quale mare o oceano tra i seguenti conteneva il maggior numero di pezzi di plastica?",
+                answers: [
+                    { text: "Mar Mediterraneo", correct: false },
+                    { text: "Oceano Indiano", correct: true },
+                    { text: "Atlantico settentrionale", correct: false },
+                    { text: "Pacifico meridionale", correct: false }
+                ],
+                topic: "inquinamento_mare"
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let incorrectAnswers = [];
+
+        const startSound = document.getElementById('start-sound');
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const perfectScoreSound = document.getElementById('perfect-score-sound');
+        const goodScoreSound = document.getElementById('good-score-sound');
+        const lowScoreSound = document.getElementById('low-score-sound');
+        const restartSound = document.getElementById('restart-sound');
+
+        const startButton = document.getElementById('start-button');
+        const startPage = document.getElementById('start-page');
+        const quizSection = document.getElementById('quiz-section');
+        const resultPage = document.getElementById('result-page');
+        const questionText = document.getElementById('question-text');
+        const answerButtonsElement = document.getElementById('answer-buttons');
+        const nextButton = document.getElementById('next-button');
+        const restartButton = document.getElementById('restart-button');
+        const scoreText = document.getElementById('score-text');
+        const questionCounterDisplay = document.getElementById('question-counter');
+        const topicSelect = document.getElementById('topic-select');
+
+        const incorrectAnswersSection = document.getElementById('incorrect-answers-section');
+        const incorrectAnswersContainer = document.getElementById('incorrect-answers-container');
+
+
+        startButton.addEventListener('click', startQuiz);
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            setNextQuestion();
+        });
+        restartButton.addEventListener('click', resetQuiz);
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function stopEndSounds() {
+             perfectScoreSound.pause();
+             perfectScoreSound.currentTime = 0;
+             goodScoreSound.pause();
+             goodScoreSound.currentTime = 0;
+             lowScoreSound.pause();
+             lowScoreSound.currentTime = 0;
+        }
+
+
+        function startQuiz() {
+            stopEndSounds();
+            restartSound.pause();
+            restartSound.currentTime = 0;
+            startSound.play();
+
+            const selectedTopic = topicSelect.value;
+            let availableQuestions = [];
+
+            if (selectedTopic === 'all') {
+                availableQuestions = [...allQuestions];
+            } else {
+                availableQuestions = allQuestions.filter(question => question.topic === selectedTopic);
+            }
+
+            const shuffledQuestions = shuffleArray(availableQuestions);
+            currentQuestions = shuffledQuestions.slice(0, Math.min(10, shuffledQuestions.length));
+
+
+            currentQuestionIndex = 0;
+            score = 0;
+            incorrectAnswers = [];
+
+            startPage.style.display = 'none';
+            resultPage.style.display = 'none';
+            quizSection.style.display = 'flex';
+            nextButton.style.display = 'none';
+            restartButton.style.display = 'none';
+
+            incorrectAnswersSection.style.display = 'none';
+            incorrectAnswersContainer.innerHTML = '';
+
+            setNextQuestion();
+        }
+
+        function setNextQuestion() {
+            resetState();
+            if (currentQuestionIndex < currentQuestions.length) {
+                showQuestion(currentQuestions[currentQuestionIndex]);
+                questionCounterDisplay.textContent = `Domanda: ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+            } else {
+                endQuiz();
+            }
+        }
+
+        function showQuestion(question) {
+            questionText.innerText = question.question;
+            answerButtonsElement.innerHTML = '';
+
+            const shuffledAnswers = shuffleArray([...question.answers]);
+
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.classList.add('btn');
+                if (answer.correct) {
+                    button.dataset.correct = answer.correct;
+                }
+                button.addEventListener('click', selectAnswer);
+                answerButtonsElement.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            clearStatusClass(document.body);
+            nextButton.style.display = 'none';
+             Array.from(answerButtonsElement.children).forEach(button => {
+                button.disabled = false;
+            });
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const correct = selectedButton.dataset.correct === 'true';
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+
+            correctSound.pause();
+            correctSound.currentTime = 0;
+            wrongSound.pause();
+            wrongSound.currentTime = 0;
+
+            if (correct) {
+                score++;
+                correctSound.play();
+            } else {
+                wrongSound.play();
+                incorrectAnswers.push({...currentQuestion});
+            }
+
+            Array.from(answerButtonsElement.children).forEach(button => {
+                if (button === selectedButton) {
+                    setStatusClass(button, correct);
+                }
+                else if (button.dataset.correct === 'true') {
+                     setStatusClass(button, true);
+                }
+                button.removeEventListener('click', selectAnswer);
+                button.disabled = true;
+            });
+
+
+             if (currentQuestionIndex < currentQuestions.length - 1) {
+                nextButton.style.display = 'block';
+            } else {
+                 setTimeout(endQuiz, 1000);
+            }
+        }
+
+        function setStatusClass(element, correct) {
+            clearStatusClass(element);
+            if (correct) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+            }
+        }
+
+        function clearStatusClass(element) {
+            element.classList.remove('correct');
+            element.classList.remove('wrong');
+        }
+
+        function endQuiz() {
+            correctSound.pause();
+            correctSound.currentTime = 0;
+            wrongSound.pause();
+            wrongSound.currentTime = 0;
+
+            quizSection.style.display = 'none';
+            resultPage.style.display = 'flex';
+            scoreText.innerText = `Hai totalizzato ${score} punti su ${currentQuestions.length}.`;
+
+            restartButton.style.display = 'block';
+            nextButton.style.display = 'none';
+
+            if (incorrectAnswers.length > 0) {
+                incorrectAnswersSection.style.display = 'block';
+                incorrectAnswersContainer.innerHTML = '';
+
+                const incorrectAnswersByTopic = incorrectAnswers.reduce((acc, question) => {
+                    const topic = question.topic;
+                    if (!acc[topic]) {
+                        acc[topic] = [];
+                    }
+                    acc[topic].push(question);
+                    return acc;
+                }, {});
+
+                const topicNames = {};
+                 Array.from(topicSelect.options).forEach(option => {
+                    if (option.value !== 'all') {
+                        const text = option.text;
+                        const match = text.match(/^(?:\d+\s*-\s*)?(.+)$/);
+                        topicNames[option.value] = match ? match[1].trim() : text.trim();
+                    }
+                });
+
+
+                Object.keys(incorrectAnswersByTopic).sort((a, b) => (topicNames[a] || a).localeCompare(topicNames[b] || b)).forEach((topicKey, index) => {
+                    const topicTitle = topicNames[topicKey] || topicKey.replace(/_/g, ' ');
+                    const errorCount = incorrectAnswersByTopic[topicKey].length;
+
+                    const topicHeader = document.createElement('h4');
+                    topicHeader.classList.add('topic-header');
+                    topicHeader.textContent = `${topicTitle} (${errorCount} errori)`;
+                    topicHeader.dataset.targetListId = `topic-list-${index}`;
+                    incorrectAnswersContainer.appendChild(topicHeader);
+
+                    const questionsList = document.createElement('ul');
+                    questionsList.classList.add('incorrect-questions-list');
+                    questionsList.id = `topic-list-${index}`;
+                    incorrectAnswersContainer.appendChild(questionsList);
+
+                    incorrectAnswersByTopic[topicKey].forEach(q => {
+                        const listItem = document.createElement('li');
+                        const correctAnswerObj = q.answers.find(answer => answer.correct);
+                        const correctAnswerText = correctAnswerObj ? correctAnswerObj.text : 'N.D.';
+                        listItem.innerHTML = `<strong>${q.question}</strong><br>Risposta corretta: <span class="correct-answer">${correctAnswerText}</span>`;
+                        questionsList.appendChild(listItem);
+                    });
+
+                    topicHeader.addEventListener('click', () => {
+                        topicHeader.classList.toggle('active');
+                        questionsList.classList.toggle('visible');
+                    });
+                });
+
+            } else {
+                incorrectAnswersSection.style.display = 'none';
+            }
+
+            if (currentQuestions.length > 0) {
+                if (score === currentQuestions.length) {
+                    perfectScoreSound.play();
+                } else if (score >= Math.floor(currentQuestions.length * 0.6)) {
+                    goodScoreSound.play();
+                } else {
+                    lowScoreSound.play();
+                }
+            }
+        }
+
+        function performResetActions() {
+            stopEndSounds();
+            restartSound.play();
+
+            currentQuestionIndex = 0;
+            score = 0;
+            incorrectAnswers = [];
+            currentQuestions = [];
+
+            resultPage.style.display = 'none';
+            startPage.style.display = 'flex';
+            questionCounterDisplay.textContent = `Domanda: 0/10`;
+
+            incorrectAnswersSection.style.display = 'none';
+            incorrectAnswersContainer.innerHTML = '';
+        }
+
+        function resetQuiz() {
+            restartButton.style.display = 'none';
+            const resultPageElement = document.getElementById('result-page');
+            const incorrectSectionInitialDisplay = incorrectAnswersSection.style.display;
+
+            if(incorrectAnswers.length > 0) {
+                 incorrectAnswersSection.style.display = 'block';
+                 document.querySelectorAll('.topic-header').forEach(header => header.classList.add('active'));
+                 document.querySelectorAll('.incorrect-questions-list').forEach(list => list.classList.add('visible'));
+             }
+
+            html2canvas(resultPageElement, { useCORS: true }).then(canvas => {
+                 if(incorrectAnswers.length > 0) {
+                     document.querySelectorAll('.topic-header').forEach(header => header.classList.remove('active'));
+                     document.querySelectorAll('.incorrect-questions-list').forEach(list => list.classList.remove('visible'));
+                     incorrectAnswersSection.style.display = incorrectSectionInitialDisplay;
+                 }
+
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'risultato_quiz.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                performResetActions();
+
+            }).catch(error => {
+                 if(incorrectAnswers.length > 0) {
+                     document.querySelectorAll('.topic-header').forEach(header => header.classList.remove('active'));
+                     document.querySelectorAll('.incorrect-questions-list').forEach(list => list.classList.remove('visible'));
+                     incorrectAnswersSection.style.display = incorrectSectionInitialDisplay;
+                 }
+                console.error('Errore durante la generazione dello screenshot:', error);
+                alert('Impossibile salvare lo screenshot del risultato.');
+                performResetActions();
+            });
+        }
+    </script>
+</body>
+</html>
